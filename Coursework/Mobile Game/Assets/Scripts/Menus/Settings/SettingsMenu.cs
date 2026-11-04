@@ -1,11 +1,8 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.EnhancedTouch;
-
 public class SettingsMenu : MonoBehaviour
 {
     [SerializeField] GameObject settingsMenu;
-
     private void OnEnable()
     {
         EnhancedTouchSupport.Enable();
@@ -14,12 +11,6 @@ public class SettingsMenu : MonoBehaviour
     {
         EnhancedTouchSupport.Disable();
     }
-    public void ShowSettings()
-    {
-        //Show the settings menu when the settings button is pushed
-        settingsMenu.SetActive(true);
-    }
-
     private void Update()
     {
         //Only run if the settings menu is open
@@ -40,5 +31,27 @@ public class SettingsMenu : MonoBehaviour
                 }
             }
         }
+    }
+    //BUTTON SETTINGS
+    //Show the settings menu
+    public void ShowSettings()
+    {
+        //Show the settings menu when the settings button is pushed
+        settingsMenu.SetActive(true);
+    }
+    //Toggle phone vibration
+    public void ToggleVibration()
+    {
+
+    }
+    //Toggle Audio
+    public void ToggleAudio()
+    {
+
+    }
+    //Reset Phone Gyro
+    public void ReserGyro()
+    {
+
     }
 }
