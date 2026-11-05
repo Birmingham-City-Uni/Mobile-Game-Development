@@ -24,6 +24,7 @@ public class DragShootScript : MonoBehaviour
     public TMP_Text ScoreText;
     public Canvas MainCanvas;
     public GameObject Particle;
+    public int stepmultiplier;
 
 
 
@@ -189,17 +190,22 @@ public class DragShootScript : MonoBehaviour
         Vector3[] points = new Vector3[trajectoryResolution];
 
         //Because I am changing the mass of the rigid body this could break things:: \_(0_0)_/
-        Vector3 velocity = initialForce / rb.mass;
+        Vector3 velocity = initialForce / rb.mass * Time.fixedDeltaTime;
 
         Vector3 startPos = transform.position;
 
+        float midpointTime = -velocity.y / Physics.gravity.y;
+        float scalar = midpointTime / (stepmultiplier * points.Length);
+
         for (int i = 0; i < points.Length; i++)
         {
-            float t = i * Time.fixedDeltaTime;
-            Vector3 pos = (startPos + velocity * t + 0.5f * Physics.gravity * t * t);
+            float t = i * scalar;
+            float step = t * stepmultiplier;
+            Vector3 pos = (startPos + velocity * step + 0.5f * Physics.gravity * step * step);
 
             pos.z = -1;
             points[(int)i] = pos;
+
         }
         lineRenderer.SetPositions(points);
     }

@@ -1364,12 +1364,13 @@ MonoBehaviour:
   inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   power: 2.95
   maxDragDistance: 16
-  trajectoryResolution: 3
+  trajectoryResolution: 100
   color: {r: 0, g: 0, b: 0, a: 0}
   Score: 0
   ScoreText: {fileID: 1209741960}
   MainCanvas: {fileID: 1785141360}
   Particle: {fileID: 1709870745522451192, guid: 86b7d803dd9c1494f9f9b91d7d72fe20, type: 3}
+  stepmultiplier: 1
   SaveGame: {fileID: 1229336897}
   collidedObject: {fileID: 0}
 --- !u!1 &810774127
