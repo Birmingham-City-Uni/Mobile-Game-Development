@@ -1370,6 +1370,7 @@ MonoBehaviour:
   ScoreText: {fileID: 1209741960}
   MainCanvas: {fileID: 1785141360}
   Particle: {fileID: 1709870745522451192, guid: 86b7d803dd9c1494f9f9b91d7d72fe20, type: 3}
+  SaveGame: {fileID: 1229336897}
   collidedObject: {fileID: 0}
 --- !u!1 &810774127
 GameObject:
@@ -1977,6 +1978,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1209741958}
   m_CullTransparentMesh: 1
+--- !u!1 &1229336897
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1229336899}
+  - component: {fileID: 1229336900}
+  m_Layer: 0
+  m_Name: SaveGame
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1229336899
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1229336897}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.46232, y: 0, z: -4.61778}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1229336900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1229336897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2d6d4032aa6f38439e71de8177ecd43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameSaveScript
+  currentData:
+    saveCounter: 0
+    saveID: 
+    highscore: 0
+    playtimeSeconds: 0
+  filePath: 
 --- !u!1 &1554406683 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8988278481982941647, guid: 9a8c366323c28af419a3d52606c2c32f, type: 3}
@@ -2890,3 +2941,4 @@ SceneRoots:
   - {fileID: 1940702373}
   - {fileID: 1996684388}
   - {fileID: 2068003558}
+  - {fileID: 1229336899}

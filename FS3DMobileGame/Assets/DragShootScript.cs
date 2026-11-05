@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
@@ -38,7 +39,13 @@ public class DragShootScript : MonoBehaviour
     private Vector2 CurrentDragVector;
     private GameObject LastCollidedObject;
 
+    public GameObject SaveGame;
+    private GameSaveScript SavegamePointer;
+
+
     public GameObject collidedObject;
+
+
 
 
 
@@ -68,6 +75,10 @@ public class DragShootScript : MonoBehaviour
         Screen.autorotateToPortrait = false;
         Screen.autorotateToPortraitUpsideDown = false;
         Screen.orientation = ScreenOrientation.AutoRotation;
+
+        SavegamePointer = GameSaveScript.First;
+
+
     }
 
 
@@ -79,6 +90,8 @@ public class DragShootScript : MonoBehaviour
             rb.linearVelocity = Vector3.zero;
             if (LastCollidedObject != collision.gameObject && LastCollidedObject != null)
             {
+
+                //In-game Stuff
                 Score++;
                 ScoreText.text = "Score: " + Score;
                 LastCollidedObject = collision.gameObject;
@@ -86,6 +99,17 @@ public class DragShootScript : MonoBehaviour
                 Instantiate(Particle, this.transform.position - new Vector3(0f,0.5f,4f), new Quaternion(0,-180,0,0));
                 var main = Particle.gameObject.GetComponent<ParticleSystem>().main;
                 main.startColor = collision.gameObject.GetComponent<MeshRenderer>().materials.ElementAt(0).color;
+
+
+
+                //Save Data Stuff
+                if(SavegamePointer.currentData.highscore < Score)
+                {
+                    SavegamePointer.currentData.highscore = Score;
+                }
+                SavegamePointer.SaveGame(SavegamePointer.currentData);
+
+
 
             }
             else if (LastCollidedObject == null) 
@@ -173,9 +197,7 @@ public class DragShootScript : MonoBehaviour
         {
             float t = i * Time.fixedDeltaTime;
             Vector3 pos = (startPos + velocity * t + 0.5f * Physics.gravity * t * t);
-            /*if (i != 0){
-                pos = pos - new Vector3(0, (2 * i) + 0.5f * (-i ^ 2), 0);
-            }*/
+
             pos.z = -1;
             points[(int)i] = pos;
         }
