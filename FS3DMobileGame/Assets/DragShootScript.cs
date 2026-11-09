@@ -1,9 +1,5 @@
-using JetBrains.Annotations;
-using System.Collections;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
@@ -47,7 +43,7 @@ public class DragShootScript : MonoBehaviour
     public GameObject collidedObject;
 
 
-
+    
 
 
 
@@ -58,6 +54,12 @@ public class DragShootScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        /*        if (SavegamePointer == null)
+                {
+                    throw new InvalidDataSourceException("Error Getting SaveGame, No Save Game Found, Failed To Create New Save Game");
+                }*/
+
+        EnhancedTouchSupport.Enable();
         Application.targetFrameRate = 60;
         touchDrag = inputActions.FindAction("TouchDrag");
         GetComponent<Rigidbody>().mass = 1;
@@ -91,24 +93,40 @@ public class DragShootScript : MonoBehaviour
             rb.linearVelocity = Vector3.zero;
             if (LastCollidedObject != collision.gameObject && LastCollidedObject != null)
             {
-
+                int HiScore = SavegamePointer.currentData.highscore;
                 //In-game Stuff
                 Score++;
-                ScoreText.text = "Score: " + Score;
                 LastCollidedObject = collision.gameObject;
                 collision.gameObject.GetComponent<MeshRenderer>().materials.ElementAt(0).color = new Color(Random.Range(0.5f, 1f), Random.Range(0.5f, 1f), Random.Range(0.5f, 1f));
                 Instantiate(Particle, this.transform.position - new Vector3(0f,0.5f,4f), new Quaternion(0,-180,0,0));
                 var main = Particle.gameObject.GetComponent<ParticleSystem>().main;
                 main.startColor = collision.gameObject.GetComponent<MeshRenderer>().materials.ElementAt(0).color;
 
-
-
                 //Save Data Stuff
-                if(SavegamePointer.currentData.highscore < Score)
+                if(SavegamePointer.currentData.highscore <= Score)
                 {
+
                     SavegamePointer.currentData.highscore = Score;
                 }
                 SavegamePointer.SaveGame(SavegamePointer.currentData);
+
+                //Output
+
+
+                //HiScore displays as 1 less than score when a new save is created, and score both Score and HiScore = 1
+                //This is a temporary Fix & Unoptimal Do Not Allow in Final Build
+                //If This Makes It To Final Build Richard Please Don't Let Me Hear The End Of It
+
+                if (HiScore == 0 & Score == 1)
+                {
+                    int DisplayHiScore = 1;
+                    ScoreText.text = "Score: " + Score + "Hi: " + DisplayHiScore;
+                }
+                else
+                {
+                    int DisplayHiScore = HiScore + 1;
+                    ScoreText.text = "Score: " + Score + "Hi: " + DisplayHiScore;
+                }
 
 
 
@@ -137,10 +155,9 @@ public class DragShootScript : MonoBehaviour
 
     private void OnCollisionExit(Collision _collision)
     {
-        Debug.Log(_collision.gameObject.name);
         collidedObject = _collision.gameObject;
 
-        // Should only continue if leavig ground
+        // Should only continue if leaving ground
         if (_collision.gameObject.tag != "Ground" || _collision.gameObject == gameObject)
             return;
 

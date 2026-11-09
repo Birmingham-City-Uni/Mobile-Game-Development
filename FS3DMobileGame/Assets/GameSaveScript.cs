@@ -1,9 +1,6 @@
 using System;
 using System.IO;
-using Unity.Android.Gradle.Manifest;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using static UnityEngine.Rendering.ReloadAttribute;
 
 public class GameSaveScript : MonoBehaviour
 {
@@ -36,15 +33,7 @@ public class GameSaveScript : MonoBehaviour
 
     public void Start()
     {
-        if (First != null)
-        {
-            Destroy(this.gameObject);
-            return;
-        
-        }
-        First = this;
-        DontDestroyOnLoad(this.gameObject);
-        
+
     }
 
     public void SaveGame(saveData data)
@@ -57,7 +46,7 @@ public class GameSaveScript : MonoBehaviour
 
         /*PlayerPrefs.SetString("GameSave", jsonString);
         PlayerPrefs.Save();*/
-        Debug.Log(jsonString);
+
     }
     public saveData LoadGame()
     {
@@ -83,11 +72,18 @@ public class GameSaveScript : MonoBehaviour
 
     void Awake()
     {
+
+        if (First != null)
+        {
+            Destroy(this.gameObject);
+            return;
+
+        }
         filePath = UnityEngine.Application.persistentDataPath + "/playerdata.json";
-            
+        First = this;
+        DontDestroyOnLoad(this.gameObject);
         currentData = LoadGame();
-
-
+        Debug.Log(currentData);
     }
     void Paused()
     {
