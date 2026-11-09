@@ -1,8 +1,5 @@
-using JetBrains.Annotations;
-using System.Collections;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
@@ -23,6 +20,7 @@ public class DragShootScript : MonoBehaviour
     public TMP_Text ScoreText;
     public Canvas MainCanvas;
     public GameObject Particle;
+    public int stepmultiplier;
 
 
 
@@ -38,8 +36,14 @@ public class DragShootScript : MonoBehaviour
     private Vector2 CurrentDragVector;
     private GameObject LastCollidedObject;
 
+    public GameObject SaveGame;
+    private GameSaveScript SavegamePointer;
+
+
     public GameObject collidedObject;
 
+
+    
 
 
 
@@ -50,6 +54,12 @@ public class DragShootScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        /*        if (SavegamePointer == null)
+                {
+                    throw new InvalidDataSourceException("Error Getting SaveGame, No Save Game Found, Failed To Create New Save Game");
+                }*/
+
+        EnhancedTouchSupport.Enable();
         Application.targetFrameRate = 60;
         touchDrag = inputActions.FindAction("TouchDrag");
         GetComponent<Rigidbody>().mass = 1;
@@ -68,6 +78,10 @@ public class DragShootScript : MonoBehaviour
         Screen.autorotateToPortrait = false;
         Screen.autorotateToPortraitUpsideDown = false;
         Screen.orientation = ScreenOrientation.AutoRotation;
+
+        SavegamePointer = GameSaveScript.First;
+
+
     }
 
 
@@ -79,13 +93,42 @@ public class DragShootScript : MonoBehaviour
             rb.linearVelocity = Vector3.zero;
             if (LastCollidedObject != collision.gameObject && LastCollidedObject != null)
             {
+                int HiScore = SavegamePointer.currentData.highscore;
+                //In-game Stuff
                 Score++;
-                ScoreText.text = "Score: " + Score;
                 LastCollidedObject = collision.gameObject;
                 collision.gameObject.GetComponent<MeshRenderer>().materials.ElementAt(0).color = new Color(Random.Range(0.5f, 1f), Random.Range(0.5f, 1f), Random.Range(0.5f, 1f));
                 Instantiate(Particle, this.transform.position - new Vector3(0f,0.5f,4f), new Quaternion(0,-180,0,0));
                 var main = Particle.gameObject.GetComponent<ParticleSystem>().main;
                 main.startColor = collision.gameObject.GetComponent<MeshRenderer>().materials.ElementAt(0).color;
+
+                //Save Data Stuff
+                if(SavegamePointer.currentData.highscore <= Score)
+                {
+
+                    SavegamePointer.currentData.highscore = Score;
+                }
+                SavegamePointer.SaveGame(SavegamePointer.currentData);
+
+                //Output
+
+
+                //HiScore displays as 1 less than score when a new save is created, and score both Score and HiScore = 1
+                //This is a temporary Fix & Unoptimal Do Not Allow in Final Build
+                //If This Makes It To Final Build Richard Please Don't Let Me Hear The End Of It
+
+                if (HiScore == 0 & Score == 1)
+                {
+                    int DisplayHiScore = 1;
+                    ScoreText.text = "Score: " + Score + "Hi: " + DisplayHiScore;
+                }
+                else
+                {
+                    int DisplayHiScore = HiScore + 1;
+                    ScoreText.text = "Score: " + Score + "Hi: " + DisplayHiScore;
+                }
+
+
 
             }
             else if (LastCollidedObject == null) 
@@ -112,10 +155,9 @@ public class DragShootScript : MonoBehaviour
 
     private void OnCollisionExit(Collision _collision)
     {
-        Debug.Log(_collision.gameObject.name);
         collidedObject = _collision.gameObject;
 
-        // Should only continue if leavig ground
+        // Should only continue if leaving ground
         if (_collision.gameObject.tag != "Ground" || _collision.gameObject == gameObject)
             return;
 
@@ -165,19 +207,22 @@ public class DragShootScript : MonoBehaviour
         Vector3[] points = new Vector3[trajectoryResolution];
 
         //Because I am changing the mass of the rigid body this could break things:: \_(0_0)_/
-        Vector3 velocity = initialForce / rb.mass;
+        Vector3 velocity = initialForce / rb.mass * Time.fixedDeltaTime;
 
         Vector3 startPos = transform.position;
 
+        float midpointTime = -velocity.y / Physics.gravity.y;
+        float scalar = midpointTime / (stepmultiplier * points.Length);
+
         for (int i = 0; i < points.Length; i++)
         {
-            float t = i * Time.fixedDeltaTime;
-            Vector3 pos = (startPos + velocity * t + 0.5f * Physics.gravity * t * t);
-            /*if (i != 0){
-                pos = pos - new Vector3(0, (2 * i) + 0.5f * (-i ^ 2), 0);
-            }*/
+            float t = i * scalar;
+            float step = t * stepmultiplier;
+            Vector3 pos = (startPos + velocity * step + 0.5f * Physics.gravity * step * step);
+
             pos.z = -1;
             points[(int)i] = pos;
+
         }
         lineRenderer.SetPositions(points);
     }

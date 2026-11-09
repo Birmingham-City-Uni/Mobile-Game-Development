@@ -21,11 +21,11 @@ public class GroundScript : MonoBehaviour
         hightChange = Random.Range(-5, 5);
         if (startHight - hightChange < 0)
         {
-            hightChange = 2;
+            hightChange = -2;
         }
         else if(startHight + hightChange > 22)
         { 
-            hightChange = -2;
+            hightChange = 2;
         }
     }
 
