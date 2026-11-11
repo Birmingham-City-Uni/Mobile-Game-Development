@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 1f;
         ShowMainMenu();
     }
 
@@ -34,5 +36,11 @@ public class UIManager : MonoBehaviour
         mainMenuPanel.SetActive(false);
         hudPanel.SetActive(false);
         gameOverPanel.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
