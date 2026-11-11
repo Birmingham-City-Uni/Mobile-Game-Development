@@ -7,7 +7,9 @@ public class Bucket_Score : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Score.Instance.addScore();
+            Score.Instance.remainingBalls();
             Destroy(other.gameObject);
+            SpawnBall.Instance.ballSpawn();
         }
     }
 }
