@@ -57,7 +57,7 @@ public class Swipe_Script : MonoBehaviour
 
     void ThrowBall()
     {
-        hasSwiped = true;
+        //hasSwiped = true;
 
         Vector2 direction = endPos - startPos;
 
