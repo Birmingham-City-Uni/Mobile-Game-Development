@@ -8,6 +8,8 @@ public class RoadScroller : MonoBehaviour
 
     void Update()
     {
+        if (!UIManager.isGameActive) return;
+
         transform.position += Vector3.down * scrollSpeed * Time.deltaTime;
         
         if (transform.position.y <= resetPositionY)

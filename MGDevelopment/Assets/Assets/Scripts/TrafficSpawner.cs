@@ -12,6 +12,8 @@ public class TrafficSpawner : MonoBehaviour
 
     void Update()
     {
+        if (!UIManager.isGameActive) return;
+
         timer += Time.deltaTime;
 
         if (timer >= spawnInterval)

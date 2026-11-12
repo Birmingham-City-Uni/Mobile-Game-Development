@@ -8,6 +8,8 @@ public class PlayerCar : MonoBehaviour
 
     void Update()
     {
+        if (!UIManager.isGameActive) return;
+
         float horizontalInput = Input.acceleration.x;
 
         #if UNITY_EDITOR
